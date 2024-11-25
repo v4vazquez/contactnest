@@ -1,0 +1,61 @@
+import axios from "axios";
+
+const http = axios.create( {
+    baseURL: 'http://localhost:9000'
+})
+
+export default{
+
+    createContact(contact,profilePicture){
+        const formData = new FormData();
+
+          // Attach contact fields directly (your backend uses @ModelAttribute Contacts)
+    Object.keys(contact).forEach((key) => {
+        formData.append(key, contact[key]);
+      });
+  
+      // Attach profile picture if provided
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture);
+      }
+      return axios.post("/contacts/new-contact", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+    },
+    getContactsForCurrentUser(userId){
+        return http.get(`/contacts/contacts-list/${userId}`,{
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+    },
+    updateContact(contactId, contact, profilePicture) {
+        const formData = new FormData();
+    
+        // Attach contact fields
+        Object.keys(contact).forEach((key) => {
+          formData.append(key, contact[key]);
+        });
+    
+        // Attach profile picture if provided
+        if (profilePicture) {
+          formData.append("profilePicture", profilePicture);
+        }
+    
+        // Send PUT request
+        return http.put(`/contacts/update-contact/${contactId}`, formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+      },
+    deleteContact(contactId){
+        return http.delete(`/contacts/delete-contact/${contactId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+             },
+        })
+    }
+}
