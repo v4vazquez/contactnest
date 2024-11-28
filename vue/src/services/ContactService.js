@@ -31,22 +31,12 @@ export default{
             }
         });
     },
-    updateContact(contactId, contact, profilePicture) {
-        const formData = new FormData();
-    
-        // Attach contact fields
-        Object.keys(contact).forEach((key) => {
-          formData.append(key, contact[key]);
-        });
-    
-        // Attach profile picture if provided
-        if (profilePicture) {
-          formData.append("profilePicture", profilePicture);
-        }
+    updateContact(contactId, formData) {
     
         // Send PUT request
         return http.put(`/contacts/update-contact/${contactId}`, formData, {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });

@@ -14,4 +14,5 @@ public interface ContactsDao {
     void updateProfilePictureUrl(int contactId, String profilePictureUrl);
 
 
+    String getProfilePictureUrl(int contactId);
 }

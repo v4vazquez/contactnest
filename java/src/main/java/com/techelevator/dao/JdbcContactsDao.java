@@ -36,10 +36,10 @@ public class JdbcContactsDao implements ContactsDao{
     }
     public void updateContact(int contactId, Contacts contacts){
         String sql = "UPDATE contacts SET name = ?, notes = ?, birthDate = ?, email = ? , " +
-                "address = ?, likes = ?, dislikes = ? , profile_picture_url = ?WHERE contact_id = ? ";
+                "address = ?, likes = ?, dislikes = ? , profile_picture_url = ? WHERE contact_id = ? ";
         jdbcTemplate.update(sql,contacts.getName(), contacts.getNotes(),contacts.getBirthDate(),
                 contacts.getEmail(), contacts.getAddress(),contacts.getLikes(), contacts.getDislikes(),
-                contacts.getProfilePictureUrl(),contactId);
+                contacts.getProfilePictureUrl(), contacts.getContactId());
     }
 
     public void deleteContact(int contactId){
@@ -50,8 +50,9 @@ public class JdbcContactsDao implements ContactsDao{
         String sql = "UPDATE contacts SET profile_picture_url = ? WHERE contact_id = ?";
         jdbcTemplate.update(sql, profilePictureUrl,contactId);
     }
+    @Override
     public String getProfilePictureUrl(int contactId) {
-        String sql = "SELECT profile_picture_url FROM contacts WHERE contact_ID =?";
+        String sql = "SELECT profile_picture_url FROM contacts WHERE contact_ID = ?";
         return jdbcTemplate.queryForObject(sql,String.class, contactId);
     }
     public Contacts mapRowToContacts(SqlRowSet results){

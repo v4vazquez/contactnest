@@ -7,7 +7,7 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import UserView from '../views/UserView.vue';
-import SimpleUploadView from '../views/SimpleUploadView.vue'
+import AddContactView from '../views/AddContactView.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -58,22 +58,23 @@ const routes = [
       requiresAuth:true
     }
   },
+
   {
-    path: "/simple-upload",
-    name: "simpleuploadview",
-    component: SimpleUploadView,
-    meta:{
-      requiresAuth: true
-    }
-  },
-  {
-    path: "/createContact",
-    name: "CreateContact",
+    path: "/create-contact",
+    name: "createcontact",
     component: UserView,
     meta:{
       requiresAuth:true
     }
-  }
+  },
+  {
+    path: "/add-contact",
+    name: "addcontact",
+    component: AddContactView,
+    meta:{
+      requiresAuth:true
+    }
+}
 ];
 
 // Create the router

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -64,17 +65,60 @@ public class ContactsController {
 //    public void updateContact(@RequestBody Contacts contacts, @PathVariable int contactId){
 //        contactsDao.updateContact(contactId,contacts);
 //    }
-    @PutMapping(path="/update-contact/{contactId}", consumes = {"multipart/form-data"})
-    public void updateContact(@PathVariable int contactId, @ModelAttribute Contacts contacts,
-                              @RequestPart(value="profilePicture", required=false) MultipartFile profilePicture){
-        contactsDao.updateContact(contactId, contacts);
-        if(profilePicture !=null && !profilePicture.isEmpty()){
-            String profilePictureUrl = s3Service.uploadFile("profile-images/"+contactId,profilePicture);
-            contacts.setProfilePictureUrl(profilePictureUrl);
-            contactsDao.updateContact(contactId, contacts);
+//    original below
+//    @PutMapping(path="/update-contact/{contactId}", consumes = {"multipart/form-data"})
+//    public void updateContact(@PathVariable int contactId, @ModelAttribute Contacts contacts,
+//                              @RequestPart(value="profilePicture", required=false) MultipartFile profilePicture){
+//
+//        contactsDao.updateContact(contactId, contacts);
+//        System.out.println("Updating contact: " + contacts);
+//        System.out.println("Received profile picture: " + profilePicture);
+//
+//        if(profilePicture !=null && !profilePicture.isEmpty()){
+//            String profilePictureUrl = s3Service.uploadFile("profile-images/"+contactId,profilePicture);
+//            contacts.setProfilePictureUrl(profilePictureUrl);
+//            contactsDao.updateContact(contactId, contacts);
+//
+//        }
+//    }
+@PutMapping(path = "/update-contact/{contactId}", consumes = {"multipart/form-data"})
+public void updateContact(
+        @PathVariable int contactId,
+        Principal principal,
+        @ModelAttribute Contacts contacts,
+        @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) {
+    System.out.println("Updating contact: " + contacts);
+    System.out.println("Contact ID: " + contacts.getContactId());
+    System.out.println("User ID: " + contacts.getUserId());
+    System.out.println("Name: " + contacts.getName());
+    System.out.println("Email: " + contacts.getEmail());
+    System.out.println("Profile Picture: " + (profilePicture != null ? profilePicture.getOriginalFilename() : "None"));
+    // Ensure contactId is set
+    User user = userDao.getUserByUsername(principal.getName());
+//    contacts.setContactId(contactId);
+    contacts.setUserId(user.getId());
+    // Update contact in database
 
-        }
+
+    // Handle profile picture upload
+//    if (profilePicture != null && !profilePicture.isEmpty()) {
+//        String profilePictureUrl = s3Service.uploadFile("profile-images/" + contactId, profilePicture);
+//        contactsDao.updateProfilePictureUrl(contactId, profilePictureUrl);
+//    }
+    if (profilePicture == null || profilePicture.isEmpty()) {
+        String existingProfilePictureUrl = contactsDao.getProfilePictureUrl(contactId);
+        contacts.setProfilePictureUrl(existingProfilePictureUrl);
+    } else {
+        // Upload new profile picture and set the URL
+        String profilePictureUrl = s3Service.uploadFile("profile-images/" + contactId, profilePicture);
+        contacts.setProfilePictureUrl(profilePictureUrl);
+        contactsDao.updateProfilePictureUrl(contactId, profilePictureUrl);
     }
+    contactsDao.updateContact(contactId, contacts);
+
+    System.out.println("Received contact: " + contacts);
+    System.out.println("Received profile picture: " + (profilePicture != null ? profilePicture.getOriginalFilename() : "None"));
+}
 
     @RequestMapping(path="/delete-contact/{contactId}", method = RequestMethod.DELETE)
     public void deleteContact(@PathVariable int contactId){

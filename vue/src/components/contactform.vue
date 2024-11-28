@@ -54,15 +54,7 @@ export default{
     methods: {
       
     async saveContact() {
-      const jwtToken = localStorage.getItem("token");
-      console.log("JWT Token:", jwtToken); // Debugging
 
-      if (!this.contact.name) {
-        alert("Contact name is required");
-        return;
-    }
-
-      const profilePictureFile = this.$refs.profilePicture?.files?.[0];
       const formData = new FormData();
 
       formData.append("name", this.contact.name);
@@ -72,9 +64,11 @@ export default{
       formData.append("dislikes", this.contact.dislikes);
       formData.append("notes", this.contact.notes);
       formData.append("birthDate", this.contact.birthDate);
-if (profilePictureFile) {
-  formData.append("profilePicture", profilePictureFile);
-}
+
+      const profilePictureFile = this.$refs.profilePicture?.files?.[0];
+      if (profilePictureFile) {
+    formData.append("profilePicture", profilePictureFile);
+    }
    // Log form data for debugging
    formData.forEach((value, key) => {
         console.log(`${key}: ${value}`);
@@ -103,8 +97,9 @@ try {
         if (this.$refs.profilePicture) {
           this.$refs.profilePicture.value = ""; 
         }
-    console.log("Contact saved successfully!"); 
-    this.$router.push("/createContact");
+    console.log("Contact saved successfully!");
+    this.$emit("contact-added"); 
+
   } else {
     const errorResponse = await response.json();
     console.error("Error saving contact:", errorResponse);

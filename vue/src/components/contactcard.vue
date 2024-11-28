@@ -11,13 +11,21 @@
         <p><strong>Notes:</strong> {{ contact.notes }}</p>
         <p><strong>Birthdate:</strong> {{ contact.birthDate }}</p>
         <button class="delete-button" @click="deleteContact(contact.contactId)">delete contact</button>
-        <button class="edit-button" @click="editContact">edit contact</button>
+        <button class="edit-button" @click="openEditModal">edit contact</button>
       </div>
+      <EditContactModal
+      v-if="isEditModalOpen"
+      :contact="contact"
+      @update-contact="updateContact"
+      @close="isEditModalOpen = false"
+    />
     </div>
   </template>
   
   <script>
   import ContactService from '../services/ContactService';
+  import EditContactModal from './EditContactModal.vue';
+
   export default {
     props: {
       contact: {
@@ -25,6 +33,12 @@
         required: true,
       },
     },
+    components: { EditContactModal },
+  data() {
+    return {
+      isEditModalOpen: false,
+    };
+  },
     methods:{
         async deleteContact(contactId) {
         try {
@@ -34,6 +48,12 @@
         } catch (error) {
             console.error("Error deleting contact:", error);
         }
+    },
+    openEditModal() {
+      this.isEditModalOpen = true;
+    },
+    updateContact(updatedContact) {
+      this.$emit("update-contact", updatedContact); // Emit to parent
     },
 },
   };

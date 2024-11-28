@@ -29,16 +29,17 @@
   }
   
   .footer {
-  
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 25px;
-    background-color: rgb(81, 149, 236);
-    color: #ffffff;
-    padding: 10px 0;
-    text-align: center;
-  }
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background-color: rgb(81, 149, 236);
+  color: #ffffff;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 1000; /* Ensure it stays above other content */
+}
   .footer-content {
   display: flex;
   justify-content: right;
