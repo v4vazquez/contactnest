@@ -79,4 +79,14 @@ export default {
 label {
   margin-right: 0.5rem;
 }
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px; /* Smaller button padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 </style>

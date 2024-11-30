@@ -3,7 +3,8 @@
       <h1>Your contacts</h1>
       <!-- <div class="contact-form-container"><ContactForm/></div> -->
       <div class="contact-grid">
-        <ContactCard v-for="contact in contacts" :key="contact.contactId" :contact="contact" @contact-deleted="refreshContacts"/>
+        <ContactCard v-for="contact in contacts" :key="contact.contactId" :contact="contact" @contact-deleted="refreshContacts" @contact-edit="openEditModal"/>
+
       </div>
     </div>
   
@@ -22,6 +23,7 @@
       return{
         contacts:[],
         isModalOpen:false,
+        selectedContact:null,
       };
     },
     async created(){
@@ -51,10 +53,20 @@
   async updateContact(updatedContact) {
       try {
         await ContactService.updateContact(updatedContact.contactId, updatedContact);
-        this.contacts = this.contacts.map((contact) =>
-          contact.contactId === updatedContact.contactId ? updatedContact : contact
-        );
-        await this.fetchContacts();
+              // Update the local contacts array without a full fetch
+      const index = this.contacts.findIndex(
+        (contact) => contact.contactId === updatedContact.contactId
+      );
+      if (index !== -1) {
+        this.contacts.splice(index, 1, updatedContact);
+      }
+
+      this.isModalOpen = false; // Close the modal
+      
+        // this.contacts = this.contacts.map((contact) =>
+        //   contact.contactId === updatedContact.contactId ? updatedContact : contact
+        // );
+      
       } catch (error) {
         console.error("Error updating contact:", error);
       }
@@ -65,6 +77,10 @@
     async refreshContacts() {
       await this.fetchContacts(); // Refresh the contacts list after deletion
     },
+    openEditModal(contact) {
+    this.selectedContact = contact; // Set the contact to be edited
+    this.isModalOpen = true; // Open the modal
+  },
   },
 
   };

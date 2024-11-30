@@ -8,6 +8,14 @@ export default {
 
   register(user) {
     return axios.post('/register', user)
+  },
+
+  getUserDetails(token){
+    return axios.get('/user-details',{
+      headers:{
+        Authorization:`Bearer ${token}`,
+      }
+    })
   }
 
 }

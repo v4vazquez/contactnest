@@ -1,10 +1,12 @@
 <template>
     <div class="UserView">
-      <h1>Add a contact</h1>
-      <div class="contact-form-container"><ContactForm/></div>
+ 
+      <div class="contact-form-container"> <ContactForm   :disabled="userRole === 'user' && contacts.length >= 4"/></div>
   
     </div>
-  
+    <p v-if="userRole === 'user' && contacts.length >= 4" class="warning-message">
+      You cannot add more contacts. Please delete an existing contact to proceed.
+    </p>
   </template>
   
   <script>
@@ -56,9 +58,10 @@
   }
   
   .contact-form-container {
-    width: 100%;
-    max-width: 800px;
-    margin-bottom: 20px;
+    display:flex;
+    justify-content: center;;
+    align-items: center;
+    height: 100%; /* Ensures it takes up full height */
   }
   
   .contact-grid {

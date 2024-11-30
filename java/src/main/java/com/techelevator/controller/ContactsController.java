@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.sql.Date;
@@ -42,6 +43,14 @@ public class ContactsController {
         if(principal != null ) {
             System.out.println(principal.getName());
             User user = userDao.getUserByUsername(principal.getName());
+
+            if (user.getAuthorities().contains("ROLE_USER") && !user.getAuthorities().contains("ROLE_ADMIN")) {
+                int contactCount = contactsDao.getContactCountForUser(user.getId());
+                if (contactCount >= 4) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Contact Limit reached");
+                }
+            }
+
             int contactId = contactsDao.createContact(user, contacts);
             contacts.setContactId(contactId);
 
@@ -87,6 +96,8 @@ public void updateContact(
         Principal principal,
         @ModelAttribute Contacts contacts,
         @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) {
+
+
     System.out.println("Updating contact: " + contacts);
     System.out.println("Contact ID: " + contacts.getContactId());
     System.out.println("User ID: " + contacts.getUserId());

@@ -19,6 +19,8 @@ import com.techelevator.dao.UserDao;
 import com.techelevator.security.jwt.JWTFilter;
 import com.techelevator.security.jwt.TokenProvider;
 
+import java.security.Principal;
+
 @RestController
 @CrossOrigin
 public class AuthenticationController {
@@ -68,6 +70,20 @@ public class AuthenticationController {
         catch (DaoException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User registration failed.");
         }
+    }
+    @GetMapping("/user-details")
+    public User getCurrentUserDetails(Principal principal) {
+        if (principal == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not logged in");
+        }
+
+        User user;
+        try {
+            user = userDao.getUserByUsername(principal.getName());
+        } catch (DaoException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving user details");
+        }
+        return user;
     }
 
 }

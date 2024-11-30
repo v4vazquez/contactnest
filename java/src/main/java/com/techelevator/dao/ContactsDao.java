@@ -13,6 +13,6 @@ public interface ContactsDao {
     void deleteContact(int contactId);
     void updateProfilePictureUrl(int contactId, String profilePictureUrl);
 
-
+    int getContactCountForUser(int userId);
     String getProfilePictureUrl(int contactId);
 }

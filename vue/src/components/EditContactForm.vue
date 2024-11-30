@@ -87,45 +87,73 @@
     // Emit the FormData to the parent component
     this.$emit("save-contact", { contactId: this.localContact.contactId, formData });
 
-//         const formData = new FormData();
-  
-//           // Check if `localContact` exists and has properties
-//   if (!this.localContact || typeof this.localContact !== "object") {
-//     console.error("Invalid contact data:", this.localContact);
-//     return;
-//   }
-
-//         Object.keys(this.localContact).forEach((key) => {
-//         formData.append(key, this.localContact[key]);
-//       });
-
-//       // Attach profile picture
-//       const profilePictureFile = this.$refs.profilePicture?.files?.[0];
-//       if (profilePictureFile) {
-//         formData.append("profilePicture", profilePictureFile);
-//       }
-
-  
-//          this.$emit("save-contact", {
-//     contactId: this.localContact.contactId, // Ensure contactId exists
-//     formData,
-//   });
       },
     },
   };
   </script>
   
   <style scoped>
-  .edit-contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .current-profile-picture {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-top: 10px;
-  }
-  </style>
-  
+.edit-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Smaller spacing between elements */
+  padding: 10px; /* Reduced padding */
+  border-radius: 8px; /* Slightly rounded corners */
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 300px; /* Half the width */
+  margin: 0 auto; /* Center the form within its container */
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #555;
+  font-size: 0.9rem; /* Slightly smaller font size */
+}
+
+input,
+textarea {
+  padding: 8px; /* Reduced padding for inputs */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical; /* Allow vertical resizing only */
+  height: 80px; /* Reduced default height */
+}
+
+input:focus,
+textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.current-profile-picture {
+  width: 80px; /* Smaller profile picture preview */
+  height: 80px;
+  object-fit: cover;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button.save-button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px; /* Smaller button padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.save-button:hover {
+  background-color: #0056b3;
+}
+</style>

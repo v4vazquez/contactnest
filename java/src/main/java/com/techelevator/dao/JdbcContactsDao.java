@@ -55,6 +55,11 @@ public class JdbcContactsDao implements ContactsDao{
         String sql = "SELECT profile_picture_url FROM contacts WHERE contact_ID = ?";
         return jdbcTemplate.queryForObject(sql,String.class, contactId);
     }
+    public int getContactCountForUser(int userId){
+        String sql = "SELECT COUNT(*) FROM CONTACTS WHERE user_id =?";
+        return jdbcTemplate.queryForObject(sql, Integer.class,userId);
+    }
+
     public Contacts mapRowToContacts(SqlRowSet results){
         Contacts contacts = new Contacts();
         contacts.setName(results.getString("name"));
