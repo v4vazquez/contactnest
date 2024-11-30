@@ -1,0 +1,16 @@
+version: 1
+frontend:
+    phases:
+        prebuild:
+          commands:
+              cd vue
+              npm ci
+        build:
+            commands:
+                - 'npm run build'
+    artifacts:
+        baseDirectory: vue/dist
+        files:
+            - '**/*'
+    cache:
+        paths: vue/node_modules/**/*
