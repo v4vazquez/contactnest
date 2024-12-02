@@ -33,3 +33,7 @@ build/
 # Ignore Spring Boot configuration files
 java/src/main/resources/application.properties
 java/src/main/resources/application.yml
+
+# Ignore environment files
+.env
+
